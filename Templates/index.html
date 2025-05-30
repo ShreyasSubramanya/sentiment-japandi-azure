@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analyzer — Japandi Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts: Minimalist + Soft Sans Serif -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f8f5f2;
+            font-family: 'Quicksand', 'Montserrat', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 430px;
+            margin: 80px auto 0 auto;
+            background: #faf8f6;
+            padding: 38px 28px 30px 28px;
+            border-radius: 22px;
+            box-shadow: 0 6px 32px 0 rgba(90,70,50,0.08), 0 1.5px 6px rgba(90,70,50,0.07);
+            border: 1.5px solid #ebe5df;
+        }
+        h1 {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 500;
+            color: #766c60;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 26px;
+            font-size: 2.1rem;
+            letter-spacing: 2px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            padding: 13px;
+            border-radius: 10px;
+            border: 1.4px solid #e0d7ce;
+            background: #f4f0ec;
+            font-size: 17px;
+            font-family: 'Quicksand', Arial, sans-serif;
+            margin-bottom: 5px;
+            outline: none;
+            transition: border 0.17s;
+        }
+        textarea:focus {
+            border: 1.7px solid #d7b899;
+            background: #f9f7f4;
+        }
+        button {
+            background: linear-gradient(90deg, #beac8a 0%, #cab99f 100%);
+            color: #fff;
+            border: none;
+            padding: 13px 0;
+            border-radius: 9px;
+            font-size: 17px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: background 0.17s, box-shadow 0.14s;
+            box-shadow: 0 2px 12px 0 rgba(200, 180, 140, 0.07);
+        }
+        button:hover {
+            background: linear-gradient(90deg, #cab99f 0%, #beac8a 100%);
+            box-shadow: 0 4px 18px 0 rgba(160,120,80,0.13);
+        }
+        .result-card {
+            margin-top: 32px;
+            padding: 18px 16px;
+            background: #f6f3ef;
+            border-left: 7px solid #beac8a;
+            border-radius: 12px;
+            box-shadow: 0 1px 7px 0 rgba(180,160,120,0.07);
+            color: #766c60;
+            font-family: 'Quicksand', Arial, sans-serif;
+            font-size: 1.08rem;
+            transition: box-shadow 0.2s;
+        }
+        .sentiment {
+            font-size: 1.16rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .sentiment .icon {
+            font-size: 1.4rem;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .confidence {
+            font-size: 0.97rem;
+            color: #a09790;
+            margin-top: 7px;
+            line-height: 1.55;
+        }
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.98em;
+            color: #b7ae9f;
+            padding-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 540px) {
+            .container {
+                margin: 30px 3vw;
+                padding: 18px 5vw 18px 5vw;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sentiment Analyzer</h1>
+        <form method="post" autocomplete="off">
+            <textarea name="text" placeholder="Enter your text here..." required>{{ request.form.text or '' }}</textarea>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if sentiment %}
+        <div class="result-card">
+            <div class="sentiment">
+                {% if sentiment == 'positive' %}
+                    <span class="icon" style="color: #a7be8e;">&#128516;</span>
+                {% elif sentiment == 'negative' %}
+                    <span class="icon" style="color: #e29578;">&#128577;</span>
+                {% elif sentiment == 'neutral' %}
+                    <span class="icon" style="color: #d7b899;">&#128528;</span>
+                {% else %}
+                    <span class="icon">&#128172;</span>
+                {% endif %}
+                {{ sentiment|capitalize }}
+            </div>
+            {% if confidence %}
+                <div class="confidence">
+                    <b>Confidence:</b><br>
+                    <span>Positive: {{ confidence['positive']|round(2) }}</span><br>
+                    <span>Neutral: {{ confidence['neutral']|round(2) }}</span><br>
+                    <span>Negative: {{ confidence['negative']|round(2) }}</span>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="footer">
+        Calm, Simple, Balanced &mdash; Japandi UI <br>
+        <span style="font-size: 0.92em;">Powered by Azure AI &middot; Shreyas</span>
+    </div>
+</body>
+</html>
